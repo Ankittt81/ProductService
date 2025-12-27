@@ -2,6 +2,7 @@ package com.smartcart.productservice.controllers;
 
 import com.smartcart.productservice.models.Product;
 import com.smartcart.productservice.services.ProductService;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -12,7 +13,7 @@ import java.util.List;
 public class ProductController {
     private ProductService productService;
 
-    public ProductController(ProductService productService) {
+    public ProductController(@Qualifier("SelfProductService") ProductService productService) {
         this.productService = productService;
     }
 
@@ -28,7 +29,7 @@ public class ProductController {
 
     @PostMapping()
     public Product createProduct(@RequestBody Product product){
-        return null;
+        return productService.createProduct(product);
     }
     @PutMapping("/{id}")
     public Product replaceProduct(@PathVariable("id") Long productId,@RequestBody Product product){
