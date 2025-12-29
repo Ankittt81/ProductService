@@ -1,7 +1,6 @@
 package com.smartcart.productservice.repositories;
 
 import com.smartcart.productservice.models.Category;
-import com.smartcart.productservice.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,14 +8,16 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product,Long> {
-    @Override
-    Optional<Product> findById(Long aLong);
+public interface CategoryRepository extends JpaRepository<Category,Long> {
 
     @Override
-    List<Product> findAll();
+    List<Category> findAll();
 
-    Product save(Product product);
+    Category save(Category category);
+
+    Optional<Category> findById(Long id);
+
+    Optional<Category> findByTitle(String title);
 
     @Override
     void deleteById(Long aLong);
