@@ -1,5 +1,6 @@
 package com.smartcart.productservice.controllers;
 
+import com.smartcart.productservice.exceptions.ProductNotFoundException;
 import com.smartcart.productservice.models.Product;
 import com.smartcart.productservice.services.ProductService;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -18,7 +19,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public Product getSingleProduct(@PathVariable("productId") Long productId){
+    public Product getSingleProduct(@PathVariable("productId") Long productId) throws ProductNotFoundException {
         return productService.getSingleProduct(productId);
     }
 
@@ -31,8 +32,14 @@ public class ProductController {
     public Product createProduct(@RequestBody Product product){
         return productService.createProduct(product);
     }
+
     @PutMapping("/{id}")
-    public Product replaceProduct(@PathVariable("id") Long productId,@RequestBody Product product){
-        return null;
+    public Product replaceProduct(@PathVariable("id") Long productId,@RequestBody Product product) throws ProductNotFoundException {
+        return productService.replaceProduct(productId,product);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteProduct(@PathVariable("id") Long productId) throws ProductNotFoundException {
+        productService.deleteProduct(productId);
     }
 }

@@ -1,5 +1,6 @@
 package com.smartcart.productservice.services;
 
+import com.smartcart.productservice.exceptions.ProductNotFoundException;
 import com.smartcart.productservice.models.Category;
 import com.smartcart.productservice.models.Product;
 import com.smartcart.productservice.repositories.CategoryRepository;
@@ -26,21 +27,21 @@ public class SelfProductService implements ProductService{
     }
 
     @Override
-    public Product getSingleProduct(Long productId) {
+    public Product getSingleProduct(Long productId) throws ProductNotFoundException {
         Optional<Product> optionalProduct= productRepository.findById(productId);
 
         if(optionalProduct.isEmpty()){
             //Exception handler
-            return null;
+            throw new ProductNotFoundException(productId);
         }
         return optionalProduct.get();
     }
 
     @Override
-    public Product createProduct(Product product) {
+    public Product createProduct(Product product)  {
         if(product.getId()!=null){
             //Exception for wrong http call
-            return null;
+            throw new IllegalArgumentException("ID must not be provided while creating a new product");
         }
         Category category=product.getCategory();
         if(category.getId()==null){
@@ -52,22 +53,20 @@ public class SelfProductService implements ProductService{
     }
 
     @Override
-    public Product replaceProduct(Long productId, Product product) {
+    public Product replaceProduct(Long productId, Product product) throws ProductNotFoundException {
         Optional<Product> optionalProduct=productRepository.findById(productId);
         if(optionalProduct.isEmpty()){
-            //Exception
-            return null;
+            throw  new ProductNotFoundException(productId);
         }
 
         return productRepository.save(product);
     }
 
     @Override
-    public void deleteProduct(Long productId) {
+    public void deleteProduct(Long productId) throws ProductNotFoundException {
         Optional<Product> optionalProduct=productRepository.findById(productId);
         if(optionalProduct.isEmpty()){
-            System.out.println("Product not found");
-            return;
+            throw new ProductNotFoundException(productId);
         }
         else{
             productRepository.deleteById(productId);
