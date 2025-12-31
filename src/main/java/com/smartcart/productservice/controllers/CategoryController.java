@@ -1,5 +1,6 @@
 package com.smartcart.productservice.controllers;
 
+import com.smartcart.productservice.exceptions.CategoryNotFoundException;
 import com.smartcart.productservice.models.Category;
 import com.smartcart.productservice.services.CategoryService;
 import org.springframework.stereotype.Controller;
@@ -21,28 +22,29 @@ public class CategoryController {
         return categoryService.getAllCategories();
     }
     @GetMapping("/id/{id}")
-    public Category getCategoryById(@PathVariable("id") Long id){
+    public Category getCategoryById(@PathVariable("id") Long id) throws CategoryNotFoundException {
         return categoryService.getCategoryById(id);
     }
 
     @GetMapping("/name/{name}")
-    public Category getCategoryByName(@PathVariable("name") String name){
+    public Category getCategoryByName(@PathVariable("name") String name) throws CategoryNotFoundException {
         return categoryService.getCategoryBytitle(name);
     }
 
     @PostMapping()
     public Category addCategory(@RequestBody Category category){
+        System.out.println("Category ID = " + category.getId());
         return categoryService.addCategory(category);
     }
 
     @PutMapping()
-    public Category updateCategory(@RequestBody Category category){
-        System.out.println("ID received: " + category.getId());
+    public Category updateCategory(@RequestBody Category category) throws CategoryNotFoundException {
+
         return categoryService.updateCategory(category);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCategoryById(@PathVariable("id") Long id){
+    public void deleteCategoryById(@PathVariable("id") Long id) throws CategoryNotFoundException {
         categoryService.deleteCategory(id);
     }
 
