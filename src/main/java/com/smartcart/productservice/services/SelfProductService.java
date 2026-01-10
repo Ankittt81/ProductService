@@ -6,12 +6,14 @@ import com.smartcart.productservice.models.Product;
 import com.smartcart.productservice.repositories.CategoryRepository;
 import com.smartcart.productservice.repositories.ProductRepository;
 import jakarta.websocket.server.ServerEndpoint;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service("SelfProductService")
+@Primary
 public class SelfProductService implements ProductService{
     private ProductRepository  productRepository;
     private CategoryRepository categoryRepository;

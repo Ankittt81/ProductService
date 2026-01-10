@@ -3,6 +3,7 @@ package com.smartcart.productservice.controllers;
 import com.smartcart.productservice.exceptions.ProductNotFoundException;
 import com.smartcart.productservice.models.Product;
 import com.smartcart.productservice.services.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,9 +13,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/product")
 public class ProductController {
-    private ProductService productService;
+    private final ProductService productService;
 
-    public ProductController(@Qualifier("SelfProductService") ProductService productService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
