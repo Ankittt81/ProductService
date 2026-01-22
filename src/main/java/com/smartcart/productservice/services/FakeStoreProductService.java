@@ -3,6 +3,7 @@ package com.smartcart.productservice.services;
 import com.smartcart.productservice.dtos.FakeStoreProductDto;
 import com.smartcart.productservice.models.Category;
 import com.smartcart.productservice.models.Product;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service("FakeStoreProductService")
+//@Primary
 public class FakeStoreProductService implements ProductService{
     private RestTemplate restTemplate;
 

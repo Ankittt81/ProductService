@@ -13,6 +13,7 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     @Override
     Optional<Product> findById(Long aLong);
 
+    Optional<Product> findByTitle(String title);
     @Override
     List<Product> findAll();
 
