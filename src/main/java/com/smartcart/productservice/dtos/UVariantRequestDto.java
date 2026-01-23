@@ -1,5 +1,6 @@
 package com.smartcart.productservice.dtos;
 
+import com.smartcart.productservice.models.Status;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +9,6 @@ import java.util.Map;
 @Getter
 @Setter
 public class UVariantRequestDto {
-    private String productName;
-    private Map<String,String> attributes;
     private Double price;
+    private Status status;
 }

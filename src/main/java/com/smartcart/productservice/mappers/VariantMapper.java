@@ -26,6 +26,14 @@ public class VariantMapper {
 
         return variant;
     }
+
+    public Variant toUpdateEntity(Variant variant, Map<String, String> attributes, Double price){
+        variant.setPrice(price);
+        variant.setAttributes(jsonUtil.toJson(attributes));
+
+        return variant;
+    }
+
     public VariantResponseDto toDto(Variant  variant) {
         VariantResponseDto variantResponseDto = new VariantResponseDto();
         variantResponseDto.setVariantId(variant.getId());
@@ -33,6 +41,7 @@ public class VariantMapper {
         variantResponseDto.setSku(variant.getSku());
         variantResponseDto.setAttributes(jsonUtil.fromJson(variant.getAttributes()));
         variantResponseDto.setPrice(variant.getPrice());
+        variantResponseDto.setStatus(variant.getStatus());
 
         return variantResponseDto;
     }

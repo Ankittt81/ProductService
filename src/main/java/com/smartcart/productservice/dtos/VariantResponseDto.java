@@ -1,5 +1,6 @@
 package com.smartcart.productservice.dtos;
 
+import com.smartcart.productservice.models.Status;
 import com.smartcart.productservice.models.Variant;
 import com.smartcart.productservice.utils.JsonUtil;
 import lombok.Getter;
@@ -15,8 +16,5 @@ public class VariantResponseDto {
     private String sku;
     private Map<String,String> attributes;
     private Double price;
-
-
-
-
+    private Status status;
 }
