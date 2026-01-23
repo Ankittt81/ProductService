@@ -33,7 +33,7 @@ public class VariantServiceImpl implements VariantService {
             return null;
         }
         Product product=optionalProduct.get();
-        List<Variant> variants=variantRepository.findAllByProduct_IdAndStatus(product.getId(),Status.ACTIVE);
+        List<Variant> variants=variantRepository.findByProductIdAndStatus(product.getId(),Status.ACTIVE);
         return variants;
     }
 

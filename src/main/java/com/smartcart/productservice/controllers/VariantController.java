@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/product/variant")
+@RequestMapping("/variants")
 public class VariantController {
     private VariantService variantService;
     private VariantMapper  variantMapper;
@@ -22,7 +22,7 @@ public class VariantController {
         this.variantMapper = variantMapper;
     }
 
-    @GetMapping("/variants")
+    @GetMapping()
     List<VariantResponseDto> getVariantByProductId(@RequestParam("productId") Long productId){
         List<Variant> variants=variantService.getVariantsByProductId(productId);
         List<VariantResponseDto> variantResponseDtos=new ArrayList<>();
@@ -32,7 +32,7 @@ public class VariantController {
         return variantResponseDtos;
     }
 
-    @GetMapping("/variantId/{variantId}")
+    @GetMapping("/{variantId}")
     VariantResponseDto getVariantByVariantId(@PathVariable("variantId") Long variantId){
         Variant variant=variantService.getVariantById(variantId);
         return variantMapper.toDto(variant);
@@ -55,7 +55,7 @@ public class VariantController {
         return variantMapper.toDto(variant);
     }
 
-    @PatchMapping("{variantId}")
+    @PatchMapping("/{variantId}/price")
     VariantResponseDto updateVariantPrice(@PathVariable("variantId") Long variantId, @RequestBody UVariantRequestDto uVariantRequestDto){
         Variant variant=variantService.updateVariantPrice(variantId,
                 uVariantRequestDto.getPrice());

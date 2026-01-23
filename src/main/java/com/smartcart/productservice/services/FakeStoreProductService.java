@@ -1,6 +1,9 @@
 package com.smartcart.productservice.services;
 
 import com.smartcart.productservice.dtos.FakeStoreProductDto;
+import com.smartcart.productservice.dtos.ProductStatusDto;
+import com.smartcart.productservice.dtos.UpdateProductDto;
+import com.smartcart.productservice.exceptions.ProductNotFoundException;
 import com.smartcart.productservice.models.Category;
 import com.smartcart.productservice.models.Product;
 import org.springframework.context.annotation.Primary;
@@ -44,18 +47,23 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public Product createProduct(Product product) {
+    public Product createProduct(String title,String description,Double basePrice, Long categoryId,String imageUrl) {
         return null;
     }
 
     @Override
-    public Product replaceProduct(Long productId, Product product) {
+    public Product replaceProduct(Long productId, UpdateProductDto product) {
         return null;
     }
 
     @Override
-    public void deleteProduct(Long productId) {
+    public Product updateProduct(Long productId, UpdateProductDto dto) throws ProductNotFoundException {
+        return null;
+    }
 
+    @Override
+    public Product updateProductStatus(Long productId, ProductStatusDto dto) throws ProductNotFoundException {
+        return null;
     }
 
     private Product convertFakeStoreDtoToProduct(FakeStoreProductDto fakeStoreProductDto) {
@@ -66,8 +74,8 @@ public class FakeStoreProductService implements ProductService{
 
         Product product = new Product();
         product.setId(fakeStoreProductDto.getId());
-        product.setPrice(fakeStoreProductDto.getPrice());
-        product.setImage(fakeStoreProductDto.getImage());
+        product.setBasePrice(fakeStoreProductDto.getPrice());
+        product.setImageUrl(fakeStoreProductDto.getImage());
         product.setDescription(fakeStoreProductDto.getDescription());
 
         Category  category = new Category();
