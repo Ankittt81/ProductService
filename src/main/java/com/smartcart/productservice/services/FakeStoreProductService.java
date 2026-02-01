@@ -1,6 +1,7 @@
 package com.smartcart.productservice.services;
 
 import com.smartcart.productservice.dtos.products.FakeStoreProductDto;
+import com.smartcart.productservice.dtos.products.ProductRequestDto;
 import com.smartcart.productservice.dtos.products.ProductStatusDto;
 import com.smartcart.productservice.dtos.products.UpdateProductDto;
 import com.smartcart.productservice.exceptions.ProductNotFoundException;
@@ -39,20 +40,20 @@ public class FakeStoreProductService implements ProductService{
     }
 
     @Override
-    public Product getSingleProduct(Long productId) {
+    public Product getProductById(Long productId) {
        ResponseEntity<FakeStoreProductDto> responseEntity= restTemplate.getForEntity("https://fakestoreapi.com/products/"+productId,
                 FakeStoreProductDto.class);
         return convertFakeStoreDtoToProduct(responseEntity.getBody());
     }
 
     @Override
-    public Product createProduct(String title,String description,Double basePrice, Long categoryId,String imageUrl) {
+    public Product createProduct(ProductRequestDto dto) {
         return null;
     }
 
     @Override
-    public Product replaceProduct(Long productId, UpdateProductDto product) {
-        return null;
+    public List<Product> getAllProductsByCategory(Long categoryId) {
+        return List.of();
     }
 
     @Override
@@ -62,6 +63,11 @@ public class FakeStoreProductService implements ProductService{
 
     @Override
     public Product updateProductStatus(Long productId, ProductStatusDto dto) throws ProductNotFoundException {
+        return null;
+    }
+
+    @Override
+    public Product deleteProduct(Long productId) {
         return null;
     }
 

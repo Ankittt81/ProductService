@@ -20,6 +20,9 @@ public interface CategoryService {
 
     Category getCategoryBytitle(String title) throws CategoryNotFoundException;
 
+    //for productservice
+    boolean hasChildren(Category category);
+    public List<Category> getLeafCategories(Category category);
 
 
 }

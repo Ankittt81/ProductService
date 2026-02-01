@@ -14,12 +14,14 @@ import java.util.*;
 
 @Service("SelfCategoryService")
 public class SelfCategoryService implements CategoryService {
+    private final CategoryService categoryService;
     private CategoryRepository  categoryRepository;
     private CategoryMapper  categoryMapper;
 
-    public SelfCategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
+    public SelfCategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper, CategoryService categoryService) {
         this.categoryRepository = categoryRepository;
         this.categoryMapper = categoryMapper;
+        this.categoryService = categoryService;
     }
 
     @Override
@@ -140,4 +142,32 @@ public class SelfCategoryService implements CategoryService {
         return categoryRepository.save(category);
     }
 
+    //Products Requirement methods
+
+    @Override
+    public boolean hasChildren(Category category) {
+        boolean exist=categoryRepository.existsByParent(category);
+        return  exist;
+    }
+
+    public List<Category> getLeafCategories(Category category){
+        List<Category> leafCategories=new ArrayList<>();
+        collectLeafCategories(category,leafCategories);
+        return leafCategories;
+    }
+
+    void collectLeafCategories(Category category,List<Category> leafCategories){
+        // Fetch ACTIVE children of current category
+        List<Category> children=categoryRepository.findAllByParentAndStatus(category,Status.ACTIVE);
+
+        // If no children → this is a LEAF category
+        if(children.isEmpty()){
+            leafCategories.add(category);
+            return;
+        }
+        // Otherwise, go deeper
+        for(Category child:children){
+            collectLeafCategories(child,leafCategories);
+        }
+    }
 }

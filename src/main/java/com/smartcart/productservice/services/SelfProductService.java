@@ -1,11 +1,14 @@
 package com.smartcart.productservice.services;
 
+import com.smartcart.productservice.dtos.products.ProductRequestDto;
 import com.smartcart.productservice.dtos.products.ProductStatusDto;
 import com.smartcart.productservice.dtos.products.UpdateProductDto;
+import com.smartcart.productservice.exceptions.CategoryNotFoundException;
 import com.smartcart.productservice.exceptions.ProductNotFoundException;
 import com.smartcart.productservice.mappers.ProductMapper;
 import com.smartcart.productservice.models.Category;
 import com.smartcart.productservice.models.Product;
+import com.smartcart.productservice.models.Status;
 import com.smartcart.productservice.repositories.CategoryRepository;
 import com.smartcart.productservice.repositories.ProductRepository;
 import org.springframework.context.annotation.Primary;
@@ -19,57 +22,61 @@ import java.util.Optional;
 public class SelfProductService implements ProductService{
     private final ProductMapper productMapper;
     private ProductRepository  productRepository;
-    private CategoryRepository categoryRepository;
+    private CategoryService categoryService;
 
-    public SelfProductService(ProductRepository productRepository, CategoryRepository categoryRepository, ProductMapper productMapper) {
+    public SelfProductService(ProductRepository productRepository, CategoryService categoryService, ProductMapper productMapper) {
         this.productRepository = productRepository;
-        this.categoryRepository = categoryRepository;
+        this.categoryService = categoryService;
         this.productMapper = productMapper;
     }
 
     @Override
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public Product createProduct(ProductRequestDto dto)  {
+        Category category=categoryService.getCategoryById(dto.getCategoryId());
+
+        if(category.getStatus()!= Status.ACTIVE){
+            throw new RuntimeException("Category is not active");
+        }
+        //  category check whehter it is parent or leaf
+        if(categoryService.hasChildren(category)){
+            throw new RuntimeException("Parent category cannot assigned to product");
+        }
+
+        Product product=productMapper.toEntity(dto,category);
+        return productRepository.save(product);
     }
 
     @Override
-    public Product getSingleProduct(Long productId) throws ProductNotFoundException {
+    public List<Product> getAllProducts() {
+        return productRepository.findAllByStatus(Status.ACTIVE);
+    }
+
+    @Override
+    public Product getProductById(Long productId) {
         Optional<Product> optionalProduct= productRepository.findById(productId);
 
         if(optionalProduct.isEmpty()){
-            //Exception handler
             throw new ProductNotFoundException(productId);
         }
         return optionalProduct.get();
     }
 
-    @Override
-    public Product createProduct(String title,String description,Double basePrice, Long categoryId,String imageUrl)  {
-        Optional<Category> optionalCategory=categoryRepository.findById(categoryId);
-        if(optionalCategory.isEmpty()){
-            return null;
+    public List<Product> getAllProductsByCategory(Long categoryId) {
+        Category category=categoryService.getCategoryById(categoryId);
+        if (category.getStatus() != Status.ACTIVE) {
+            throw new RuntimeException("Category is not active");
         }
-        Product product=productMapper.toEntity(title,description,basePrice,optionalCategory.get(),imageUrl);
-        return productRepository.save(product);
+        if (!categoryService.hasChildren(category)) {
+            return productRepository
+                    .findByCategoryAndStatus(category, Status.ACTIVE);
+        }
+        List<Category> categories=categoryService.getLeafCategories(category);
+        List<Product> products=productRepository.findByCategoryInAndStatus(categories, Status.ACTIVE);
+        return products;
     }
 
     @Override
-    public Product replaceProduct(Long productId, UpdateProductDto dto) throws ProductNotFoundException {
-        Optional<Product> optionalProduct=productRepository.findById(productId);
-        if(optionalProduct.isEmpty()){
-            throw  new ProductNotFoundException(productId);
-        }
-        Product product=optionalProduct.get();
-        product.setDescription(dto.getDescription());
-        product.setBasePrice(dto.getBasePrice());
-        product.setImageUrl(dto.getImageUrl());
-        product.setTitle(dto.getTitle());
-
-        return productRepository.save(product);
-    }
-
-    @Override
-    public Product updateProduct(Long productId, UpdateProductDto dto) throws ProductNotFoundException {
+    public Product updateProduct(Long productId, UpdateProductDto dto){
         Optional<Product> optionalProduct=productRepository.findById(productId);
         if(optionalProduct.isEmpty()){
             throw  new ProductNotFoundException(productId);
@@ -92,5 +99,16 @@ public class SelfProductService implements ProductService{
         product.setStatus(dto.getStatus());
 
         return product;
+    }
+
+    @Override
+    public Product deleteProduct(Long productId) {
+        Optional<Product> optionalProduct=productRepository.findById(productId);
+        if(optionalProduct.isEmpty()){
+            throw new ProductNotFoundException(productId);
+        }
+        Product product=optionalProduct.get();
+        product.setStatus(Status.DELETED);
+        return productRepository.save(product);
     }
 }

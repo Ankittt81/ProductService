@@ -1,20 +1,23 @@
 package com.smartcart.productservice.mappers;
 
+import com.smartcart.productservice.dtos.products.ProductRequestDto;
 import com.smartcart.productservice.dtos.products.ProductResponseDto;
 import com.smartcart.productservice.models.Category;
 import com.smartcart.productservice.models.Product;
+import com.smartcart.productservice.models.Status;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ProductMapper {
 
-    public Product toEntity(String title, String description, Double basePrice, Category category, String imageUrl){
+    public Product toEntity(ProductRequestDto dto, Category category){
         Product product=new Product();
-        product.setTitle(title);
-        product.setDescription(description);
-        product.setBasePrice(basePrice);
         product.setCategory(category);
-        product.setImageUrl(imageUrl);
+        product.setDescription(dto.getDescription());
+        product.setTitle(dto.getTitle());
+        product.setBasePrice(dto.getBasePrice());
+        product.setImageUrl(dto.getImageUrl());
+        product.setStatus(Status.ACTIVE);
         return product;
     }
 
