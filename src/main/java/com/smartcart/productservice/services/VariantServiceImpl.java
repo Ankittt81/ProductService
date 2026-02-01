@@ -6,7 +6,6 @@ import com.smartcart.productservice.models.Status;
 import com.smartcart.productservice.models.Variant;
 import com.smartcart.productservice.repositories.ProductRepository;
 import com.smartcart.productservice.repositories.VariantRepository;
-import com.smartcart.productservice.utils.JsonUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

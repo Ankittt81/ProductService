@@ -1,8 +1,7 @@
 package com.smartcart.productservice.services;
 
-import com.smartcart.productservice.dtos.ProductRequestDto;
-import com.smartcart.productservice.dtos.ProductStatusDto;
-import com.smartcart.productservice.dtos.UpdateProductDto;
+import com.smartcart.productservice.dtos.products.ProductStatusDto;
+import com.smartcart.productservice.dtos.products.UpdateProductDto;
 import com.smartcart.productservice.exceptions.ProductNotFoundException;
 import com.smartcart.productservice.models.Product;
 

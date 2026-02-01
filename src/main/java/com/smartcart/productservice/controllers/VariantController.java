@@ -1,8 +1,8 @@
 package com.smartcart.productservice.controllers;
 
-import com.smartcart.productservice.dtos.UVariantRequestDto;
-import com.smartcart.productservice.dtos.VariantRequestDto;
-import com.smartcart.productservice.dtos.VariantResponseDto;
+import com.smartcart.productservice.dtos.variants.UVariantRequestDto;
+import com.smartcart.productservice.dtos.variants.VariantRequestDto;
+import com.smartcart.productservice.dtos.variants.VariantResponseDto;
 import com.smartcart.productservice.mappers.VariantMapper;
 import com.smartcart.productservice.models.Variant;
 import com.smartcart.productservice.services.VariantService;

@@ -1,4 +1,4 @@
-package com.smartcart.productservice.dtos;
+package com.smartcart.productservice.dtos.variants;
 
 import com.smartcart.productservice.models.Status;
 import lombok.Getter;
@@ -6,6 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductStatusDto {
+public class UVariantRequestDto {
+    private Double price;
     private Status status;
 }

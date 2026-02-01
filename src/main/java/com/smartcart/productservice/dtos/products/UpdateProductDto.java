@@ -1,4 +1,4 @@
-package com.smartcart.productservice.dtos;
+package com.smartcart.productservice.dtos.products;
 
 import lombok.Getter;
 import lombok.Setter;

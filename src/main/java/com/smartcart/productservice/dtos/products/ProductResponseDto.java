@@ -1,17 +1,17 @@
-package com.smartcart.productservice.dtos;
+package com.smartcart.productservice.dtos.products;
 
-import com.smartcart.productservice.models.Category;
 import com.smartcart.productservice.models.Status;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class ProductRequestDto {
+public class ProductResponseDto {
+    private Long productId;
     private String title;
     private String description;
     private Double basePrice;
+    private String categoryName;
     private String imageUrl;
-    private Long categoryId;
-
+    private Status status;
 }

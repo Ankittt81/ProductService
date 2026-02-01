@@ -1,6 +1,6 @@
 package com.smartcart.productservice.mappers;
 
-import com.smartcart.productservice.dtos.VariantResponseDto;
+import com.smartcart.productservice.dtos.variants.VariantResponseDto;
 import com.smartcart.productservice.models.Product;
 import com.smartcart.productservice.models.Status;
 import com.smartcart.productservice.models.Variant;

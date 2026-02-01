@@ -1,9 +1,8 @@
 package com.smartcart.productservice.mappers;
 
-import com.smartcart.productservice.dtos.ProductResponseDto;
+import com.smartcart.productservice.dtos.products.ProductResponseDto;
 import com.smartcart.productservice.models.Category;
 import com.smartcart.productservice.models.Product;
-import com.smartcart.productservice.models.Status;
 import org.springframework.stereotype.Component;
 
 @Component

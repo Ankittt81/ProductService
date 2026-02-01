@@ -1,6 +1,5 @@
 package com.smartcart.productservice.repositories;
 
-import com.smartcart.productservice.models.Category;
 import com.smartcart.productservice.models.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

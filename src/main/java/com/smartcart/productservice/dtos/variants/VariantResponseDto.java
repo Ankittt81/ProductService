@@ -1,8 +1,6 @@
-package com.smartcart.productservice.dtos;
+package com.smartcart.productservice.dtos.variants;
 
 import com.smartcart.productservice.models.Status;
-import com.smartcart.productservice.models.Variant;
-import com.smartcart.productservice.utils.JsonUtil;
 import lombok.Getter;
 import lombok.Setter;
 

@@ -1,12 +1,11 @@
 package com.smartcart.productservice.services;
 
-import com.smartcart.productservice.dtos.FakeStoreProductDto;
-import com.smartcart.productservice.dtos.ProductStatusDto;
-import com.smartcart.productservice.dtos.UpdateProductDto;
+import com.smartcart.productservice.dtos.products.FakeStoreProductDto;
+import com.smartcart.productservice.dtos.products.ProductStatusDto;
+import com.smartcart.productservice.dtos.products.UpdateProductDto;
 import com.smartcart.productservice.exceptions.ProductNotFoundException;
 import com.smartcart.productservice.models.Category;
 import com.smartcart.productservice.models.Product;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

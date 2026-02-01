@@ -1,10 +1,10 @@
 package com.smartcart.productservice.controllers;
 
 import com.smartcart.productservice.commons.AuthCommon;
-import com.smartcart.productservice.dtos.ProductRequestDto;
-import com.smartcart.productservice.dtos.ProductResponseDto;
-import com.smartcart.productservice.dtos.ProductStatusDto;
-import com.smartcart.productservice.dtos.UpdateProductDto;
+import com.smartcart.productservice.dtos.products.ProductRequestDto;
+import com.smartcart.productservice.dtos.products.ProductResponseDto;
+import com.smartcart.productservice.dtos.products.ProductStatusDto;
+import com.smartcart.productservice.dtos.products.UpdateProductDto;
 import com.smartcart.productservice.exceptions.ProductNotFoundException;
 import com.smartcart.productservice.mappers.ProductMapper;
 import com.smartcart.productservice.models.Product;
@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping("/product")
 public class ProductController {
     private final ProductService productService;
-    private ProductMapper  productMapper;
+    private final ProductMapper  productMapper;
 
     public ProductController(ProductService productService,
                              ProductMapper productMapper) {
@@ -29,7 +29,8 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public ProductResponseDto getSingleProduct(@PathVariable("productId") Long productId) throws ProductNotFoundException {
+    public ProductResponseDto getSingleProduct(@PathVariable("productId") Long productId)
+            throws ProductNotFoundException {
         Product product=productService.getSingleProduct(productId);
         return productMapper.toDto(product);
     }

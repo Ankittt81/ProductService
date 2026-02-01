@@ -2,7 +2,6 @@ package com.smartcart.productservice.services;
 
 import com.smartcart.productservice.models.Status;
 import com.smartcart.productservice.models.Variant;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
