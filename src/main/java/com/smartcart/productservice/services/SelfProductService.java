@@ -35,11 +35,11 @@ public class SelfProductService implements ProductService{
         Category category=categoryService.getCategoryById(dto.getCategoryId());
 
         if(category.getStatus()!= Status.ACTIVE){
-            throw new RuntimeException("Category is not active");
+            throw new CategoryNotFoundException("Category is not active");
         }
         //  category check whehter it is parent or leaf
         if(categoryService.hasChildren(category)){
-            throw new RuntimeException("Parent category cannot assigned to product");
+            throw new CategoryNotFoundException("Parent category cannot assigned to product");
         }
 
         Product product=productMapper.toEntity(dto,category);
@@ -64,7 +64,7 @@ public class SelfProductService implements ProductService{
     public List<Product> getAllProductsByCategory(Long categoryId) {
         Category category=categoryService.getCategoryById(categoryId);
         if (category.getStatus() != Status.ACTIVE) {
-            throw new RuntimeException("Category is not active");
+            throw new CategoryNotFoundException("Category is not active");
         }
         if (!categoryService.hasChildren(category)) {
             return productRepository
@@ -81,7 +81,11 @@ public class SelfProductService implements ProductService{
         if(optionalProduct.isEmpty()){
             throw  new ProductNotFoundException(productId);
         }
+
         Product product=optionalProduct.get();
+        if(product.getStatus()== Status.DELETED){
+            throw  new RuntimeException("Cannot update deleted product");
+        }
         if(dto.getTitle()!=null) product.setTitle(dto.getTitle());
         if(dto.getDescription()!=null) product.setDescription(dto.getDescription());
         if(dto.getBasePrice()!=null) product.setBasePrice(dto.getBasePrice());
@@ -98,7 +102,7 @@ public class SelfProductService implements ProductService{
         Product product=optionalProduct.get();
         product.setStatus(dto.getStatus());
 
-        return product;
+        return productRepository.save(product);
     }
 
     @Override

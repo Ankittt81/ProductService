@@ -4,6 +4,7 @@ import com.smartcart.productservice.dtos.categories.CategoryRequestDto;
 import com.smartcart.productservice.dtos.categories.CategoryStatusRequestDto;
 import com.smartcart.productservice.dtos.categories.CategoryTreeDto;
 import com.smartcart.productservice.exceptions.CategoryNotFoundException;
+import com.smartcart.productservice.exceptions.ResourceAlreadyExistsException;
 import com.smartcart.productservice.mappers.CategoryMapper;
 import com.smartcart.productservice.models.Category;
 import com.smartcart.productservice.models.Status;
@@ -14,14 +15,12 @@ import java.util.*;
 
 @Service("SelfCategoryService")
 public class SelfCategoryService implements CategoryService {
-    private final CategoryService categoryService;
     private CategoryRepository  categoryRepository;
     private CategoryMapper  categoryMapper;
 
-    public SelfCategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper, CategoryService categoryService) {
+    public SelfCategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;
         this.categoryMapper = categoryMapper;
-        this.categoryService = categoryService;
     }
 
     @Override
@@ -30,14 +29,14 @@ public class SelfCategoryService implements CategoryService {
         if(Dto.getParentId()!=null){
             Optional<Category> parentOptional=categoryRepository.findById(Dto.getParentId());
             if(parentOptional.isEmpty()){
-                return null;
+                throw new CategoryNotFoundException("Category with"+Dto.getParentId()+"Id is not exist");
             }
             parent=parentOptional.get();
         }
         String normalizedTitle= Dto.getTitle().trim().toLowerCase();
         boolean exist=categoryRepository.existsByParentAndTitle(parent,normalizedTitle);
         if(exist){
-            return null;
+            throw new ResourceAlreadyExistsException("Category with"+Dto.getTitle()+"Title already exists with given parent");
         }
         Dto.setTitle(normalizedTitle);
         Category category=categoryMapper.toEntity(Dto,parent);
@@ -45,10 +44,10 @@ public class SelfCategoryService implements CategoryService {
     }
 
     @Override
-    public Category getCategoryById(Long id) throws CategoryNotFoundException{
+    public Category getCategoryById(Long id) {
         Optional<Category> category = categoryRepository.findById(id);
         if(category.isEmpty()){
-            throw new CategoryNotFoundException(id);
+            throw new CategoryNotFoundException(id+" does not exist");
         }
         return category.get();
     }
@@ -62,7 +61,7 @@ public class SelfCategoryService implements CategoryService {
     public List<Category> getChildCategories(Long parentId) {
         Optional<Category> parentOptional=categoryRepository.findById(parentId);
         if(parentOptional.isEmpty()){
-            return null;
+            throw new CategoryNotFoundException("Category with"+parentId+"Id does not exist");
         }
         Category parent=parentOptional.get();
         List<Category> childCategories=categoryRepository.findByParentAndStatus(parent,Status.ACTIVE);
@@ -95,10 +94,10 @@ public class SelfCategoryService implements CategoryService {
     }
 
     @Override
-    public Category getCategoryBytitle(String title) throws CategoryNotFoundException{
+    public Category getCategoryBytitle(String title){
         Optional<Category> category=categoryRepository.findByTitle(title);
         if(category.isEmpty()){
-            throw new  CategoryNotFoundException(title);
+            throw new  CategoryNotFoundException(title+" does not exist");
         }
         return category.get();
     }
@@ -107,14 +106,14 @@ public class SelfCategoryService implements CategoryService {
     public Category updateCategory(Long id,CategoryRequestDto dto){
         Optional<Category> optionalCategory=categoryRepository.findById(id);
         if(optionalCategory.isEmpty()){
-         //   throw new CategoryNotFoundException();
-            return null;
+           throw new CategoryNotFoundException(id+" does not exist");
+
         }
        Category category=optionalCategory.get();
         String normalizedTitle= dto.getTitle().trim().toLowerCase();
         boolean exist=categoryRepository.existsByParentAndTitle(category.getParent(),normalizedTitle);
         if(exist){
-            return null;
+            throw new ResourceAlreadyExistsException("Category with"+dto.getTitle()+"Title already exists with given parent");
         }
         category.setTitle(normalizedTitle);
         return categoryRepository.save(category);
@@ -124,7 +123,7 @@ public class SelfCategoryService implements CategoryService {
     public Category updateCategoryStatus(Long id, CategoryStatusRequestDto dto) {
         Optional<Category> optionalCategory=categoryRepository.findById(id);
         if(optionalCategory.isEmpty()){
-            return null;
+            throw new CategoryNotFoundException(id+" does not exist");
         }
         Category category=optionalCategory.get();
         category.setStatus(dto.getStatus());
@@ -132,7 +131,7 @@ public class SelfCategoryService implements CategoryService {
     }
 
     @Override
-    public Category deleteCategory(Long id) throws CategoryNotFoundException {
+    public Category deleteCategory(Long id){
         Optional<Category> categoryOptional=categoryRepository.findById(id);
         if(categoryOptional.isEmpty()){
             throw new  CategoryNotFoundException(id);

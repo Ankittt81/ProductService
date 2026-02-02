@@ -1,5 +1,7 @@
 package com.smartcart.productservice.services;
 
+import com.smartcart.productservice.exceptions.ProductNotFoundException;
+import com.smartcart.productservice.exceptions.VariantNotFoundException;
 import com.smartcart.productservice.mappers.VariantMapper;
 import com.smartcart.productservice.models.Product;
 import com.smartcart.productservice.models.Status;
@@ -29,7 +31,7 @@ public class VariantServiceImpl implements VariantService {
     public List<Variant> getVariantsByProductId(Long productId) {
         Optional<Product> optionalProduct=productRepository.findById(productId);
         if(optionalProduct.isEmpty()){
-            return null;
+            throw  new ProductNotFoundException("Product not found with this"+productId);
         }
         Product product=optionalProduct.get();
         List<Variant> variants=variantRepository.findByProductIdAndStatus(product.getId(),Status.ACTIVE);
@@ -41,7 +43,7 @@ public class VariantServiceImpl implements VariantService {
         Optional<Variant> optionalVariant=variantRepository.findBySku(sku);
 
         if(optionalVariant.isEmpty()){
-            return null;
+            throw new VariantNotFoundException("Variant not found with this"+sku);
         }
         return optionalVariant.get();
     }
@@ -50,7 +52,7 @@ public class VariantServiceImpl implements VariantService {
     public Variant getVariantById(Long variantId) {
         Optional<Variant>  optionalVariant = variantRepository.findById(variantId);
         if(optionalVariant.isEmpty()){
-            return null;
+            throw new VariantNotFoundException("Variant not found with this"+variantId);
         }
         return optionalVariant.get();
     }
@@ -59,7 +61,7 @@ public class VariantServiceImpl implements VariantService {
     public Variant createVariant(Long productId, String sku, Map<String, String> attributes, Double price) {
         Optional<Product> productOptional=productRepository.findById(productId);
         if(productOptional.isEmpty()){
-            return null;
+           throw new ProductNotFoundException("Product not found with this"+productId);
         }
         Product product=productOptional.get();
         Variant variant=variantMapper.toEntity(product,sku,attributes,price);
@@ -70,7 +72,7 @@ public class VariantServiceImpl implements VariantService {
     public Variant updateVariantPrice(Long variantId,Double price) {
         Optional<Variant> optionalVariant=variantRepository.findById(variantId);
         if(optionalVariant.isEmpty()){
-            return null;
+           throw new VariantNotFoundException("Variant not found with this"+variantId);
         }
         Variant variant=optionalVariant.get();
         variant.setPrice(price);
@@ -82,7 +84,7 @@ public class VariantServiceImpl implements VariantService {
     public Variant updateVariantStatus(Long variantId,Status status) {
         Optional<Variant> optionalVariant=variantRepository.findById(variantId);
         if(optionalVariant.isEmpty()){
-            return null;
+            throw new VariantNotFoundException("Variant not found with this"+variantId);
         }
         Variant variant=optionalVariant.get();
         variant.setStatus(status);
