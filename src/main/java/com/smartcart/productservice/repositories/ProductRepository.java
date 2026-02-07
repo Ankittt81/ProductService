@@ -17,7 +17,7 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     List<Product> findByCategoryAndStatus(Category category, Status status);
 
     Optional<Product> findByTitle(String title);
-
+   boolean existsByTitleIgnoreCaseAndCategory(String title, Category category);
     List<Product> findAllByStatus(Status status);
 
     Product save(Product product);

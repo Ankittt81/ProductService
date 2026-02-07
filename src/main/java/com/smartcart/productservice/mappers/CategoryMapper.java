@@ -14,8 +14,11 @@ public class CategoryMapper {
         CategoryResponseDto categoryResponseDto=new CategoryResponseDto();
         categoryResponseDto.setCategoryId(category.getId());
         categoryResponseDto.setTitle(category.getTitle());
-        categoryResponseDto.setParentId(category.getParent().getId());
-        categoryResponseDto.setParentTitle(category.getParent().getTitle());
+        Category parent=category.getParent();
+        if(parent!=null){
+            categoryResponseDto.setParentId(parent.getId());
+            categoryResponseDto.setParentTitle(parent.getTitle());
+        }
         categoryResponseDto.setStatus(category.getStatus());
         return categoryResponseDto;
     }

@@ -5,6 +5,7 @@ import com.smartcart.productservice.dtos.products.ProductStatusDto;
 import com.smartcart.productservice.dtos.products.UpdateProductDto;
 import com.smartcart.productservice.exceptions.CategoryNotFoundException;
 import com.smartcart.productservice.exceptions.ProductNotFoundException;
+import com.smartcart.productservice.exceptions.ResourceAlreadyExistsException;
 import com.smartcart.productservice.mappers.ProductMapper;
 import com.smartcart.productservice.models.Category;
 import com.smartcart.productservice.models.Product;
@@ -41,7 +42,10 @@ public class SelfProductService implements ProductService{
         if(categoryService.hasChildren(category)){
             throw new CategoryNotFoundException("Parent category cannot assigned to product");
         }
-
+        boolean exist=productRepository.existsByTitleIgnoreCaseAndCategory(dto.getTitle(),category);
+        if(exist){
+            throw new ResourceAlreadyExistsException("Product already exists");
+        }
         Product product=productMapper.toEntity(dto,category);
         return productRepository.save(product);
     }
@@ -56,7 +60,7 @@ public class SelfProductService implements ProductService{
         Optional<Product> optionalProduct= productRepository.findById(productId);
 
         if(optionalProduct.isEmpty()){
-            throw new ProductNotFoundException(productId);
+            throw new ProductNotFoundException("Invalid Id");
         }
         return optionalProduct.get();
     }
@@ -71,6 +75,7 @@ public class SelfProductService implements ProductService{
                     .findByCategoryAndStatus(category, Status.ACTIVE);
         }
         List<Category> categories=categoryService.getLeafCategories(category);
+
         List<Product> products=productRepository.findByCategoryInAndStatus(categories, Status.ACTIVE);
         return products;
     }
@@ -79,7 +84,7 @@ public class SelfProductService implements ProductService{
     public Product updateProduct(Long productId, UpdateProductDto dto){
         Optional<Product> optionalProduct=productRepository.findById(productId);
         if(optionalProduct.isEmpty()){
-            throw  new ProductNotFoundException(productId);
+            throw  new ProductNotFoundException("Invalid Id");
         }
 
         Product product=optionalProduct.get();
@@ -97,7 +102,7 @@ public class SelfProductService implements ProductService{
     public Product updateProductStatus(Long productId, ProductStatusDto dto) throws ProductNotFoundException {
         Optional<Product> optionalProduct=productRepository.findById(productId);
         if(optionalProduct.isEmpty()){
-            throw new ProductNotFoundException(productId);
+            throw new ProductNotFoundException(productId+ " is an invalid id");
         }
         Product product=optionalProduct.get();
         product.setStatus(dto.getStatus());
@@ -109,7 +114,7 @@ public class SelfProductService implements ProductService{
     public Product deleteProduct(Long productId) {
         Optional<Product> optionalProduct=productRepository.findById(productId);
         if(optionalProduct.isEmpty()){
-            throw new ProductNotFoundException(productId);
+            throw new ProductNotFoundException(productId+" is an invalid id");
         }
         Product product=optionalProduct.get();
         product.setStatus(Status.DELETED);

@@ -1,10 +1,7 @@
 package com.smartcart.productservice.controllers;
 
 import com.smartcart.productservice.commons.AuthCommon;
-import com.smartcart.productservice.dtos.products.ProductRequestDto;
-import com.smartcart.productservice.dtos.products.ProductResponseDto;
-import com.smartcart.productservice.dtos.products.ProductStatusDto;
-import com.smartcart.productservice.dtos.products.UpdateProductDto;
+import com.smartcart.productservice.dtos.products.*;
 import com.smartcart.productservice.exceptions.ProductNotFoundException;
 import com.smartcart.productservice.mappers.ProductMapper;
 import com.smartcart.productservice.models.Product;

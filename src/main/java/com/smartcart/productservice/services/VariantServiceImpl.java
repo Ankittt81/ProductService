@@ -61,7 +61,7 @@ public class VariantServiceImpl implements VariantService {
     public Variant createVariant(Long productId, String sku, Map<String, String> attributes, Double price) {
         Optional<Product> productOptional=productRepository.findById(productId);
         if(productOptional.isEmpty()){
-           throw new ProductNotFoundException("Product not found with this"+productId);
+           throw new ProductNotFoundException("Product not found with this "+productId);
         }
         Product product=productOptional.get();
         Variant variant=variantMapper.toEntity(product,sku,attributes,price);

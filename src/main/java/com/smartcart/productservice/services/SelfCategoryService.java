@@ -29,14 +29,14 @@ public class SelfCategoryService implements CategoryService {
         if(Dto.getParentId()!=null){
             Optional<Category> parentOptional=categoryRepository.findById(Dto.getParentId());
             if(parentOptional.isEmpty()){
-                throw new CategoryNotFoundException("Category with"+Dto.getParentId()+"Id is not exist");
+                throw new CategoryNotFoundException("Category with "+Dto.getParentId()+" Id does not exist");
             }
             parent=parentOptional.get();
         }
         String normalizedTitle= Dto.getTitle().trim().toLowerCase();
         boolean exist=categoryRepository.existsByParentAndTitle(parent,normalizedTitle);
         if(exist){
-            throw new ResourceAlreadyExistsException("Category with"+Dto.getTitle()+"Title already exists with given parent");
+            throw new ResourceAlreadyExistsException("Category with "+Dto.getTitle()+" Title already exists with "+parent.getTitle() +" parent");
         }
         Dto.setTitle(normalizedTitle);
         Category category=categoryMapper.toEntity(Dto,parent);
@@ -47,14 +47,18 @@ public class SelfCategoryService implements CategoryService {
     public Category getCategoryById(Long id) {
         Optional<Category> category = categoryRepository.findById(id);
         if(category.isEmpty()){
-            throw new CategoryNotFoundException(id+" does not exist");
+            throw new CategoryNotFoundException("Category with Id "+ id+" does not exist");
         }
         return category.get();
     }
 
     @Override
     public List<Category> getAllRootCategories() {
-        return categoryRepository.findByParentIsNullAndStatus(Status.ACTIVE);
+        List<Category>parents= categoryRepository.findByParentIsNullAndStatus(Status.ACTIVE);
+        if(parents.isEmpty()){
+            throw new CategoryNotFoundException("No root Categories available");
+        }
+        return parents;
     }
 
     @Override
@@ -134,7 +138,7 @@ public class SelfCategoryService implements CategoryService {
     public Category deleteCategory(Long id){
         Optional<Category> categoryOptional=categoryRepository.findById(id);
         if(categoryOptional.isEmpty()){
-            throw new  CategoryNotFoundException(id);
+            throw new  CategoryNotFoundException("Category "+ id+" Not found");
         }
         Category category=categoryOptional.get();
         category.setStatus(Status.DELETED);

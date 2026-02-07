@@ -26,6 +26,7 @@ public class CategoryController {
 
     @PostMapping()
     public CategoryResponseDto addCategory(@RequestBody CategoryRequestDto categoryRequestDto){
+        System.out.println("Adding Category");
         Category category=categoryService.addCategory(categoryRequestDto);
 
         return categoryMapper.toDto(category);
@@ -40,6 +41,7 @@ public class CategoryController {
     @GetMapping("/root")
     public List<CategoryResponseDto> getAllRootCategories(){
         List<Category> categoryList=categoryService.getAllRootCategories();
+
         List<CategoryResponseDto> categoryResponseDtoList=new ArrayList<>();
         for(Category category:categoryList){
             categoryResponseDtoList.add(categoryMapper.toDto(category));
@@ -62,7 +64,7 @@ public class CategoryController {
         return categoryService.getCategoryTree();
     }
 
-    @GetMapping("/search")
+    @GetMapping("/search")   //search?title=Electronics
     public CategoryResponseDto getCategoryBytitle(@RequestParam("title") String title) throws CategoryNotFoundException {
         Category category= categoryService.getCategoryBytitle(title);
         return  categoryMapper.toDto(category);

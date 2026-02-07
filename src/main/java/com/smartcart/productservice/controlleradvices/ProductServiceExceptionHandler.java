@@ -3,18 +3,31 @@ package com.smartcart.productservice.controlleradvices;
 import com.smartcart.productservice.exceptions.CategoryNotFoundException;
 import com.smartcart.productservice.exceptions.ProductNotFoundException;
 import com.smartcart.productservice.exceptions.ResourceAlreadyExistsException;
+import com.smartcart.productservice.exceptions.UnAuthenticatedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.util.Map;
+
 @ControllerAdvice
 public class ProductServiceExceptionHandler {
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleException(Exception ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of(
+                        "error", "Internal Server Error",
+                        "message", ex.getMessage()
+                ));
+    }
 
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<String> handleProductNotFound(ProductNotFoundException productNotFoundException){
         return new ResponseEntity<>(
-                productNotFoundException.getProductId() +" is an invalid Id,Please pass a valid id",
+                productNotFoundException.getMessage(),
                 HttpStatus.NOT_FOUND
         );
     }
@@ -26,19 +39,18 @@ public class ProductServiceExceptionHandler {
 
     @ExceptionHandler(CategoryNotFoundException.class)
     public ResponseEntity<String> handleCategoryNotFound(CategoryNotFoundException  categoryNotFoundException){
-        String message;
-        if(categoryNotFoundException.getCategoryId()!=null){
-            message=categoryNotFoundException.getCategoryId() +" is an Invalid Id! Please enter valid Id";
-        }else if(categoryNotFoundException.getCategoryName()!=null){
-            message=categoryNotFoundException.getCategoryName() +" is an Invalid Title! Please enter valid Title";
-        }else {
-            message = "Category not found";
-        }
+        String message=categoryNotFoundException.getMessage();
         return new ResponseEntity<>(message,HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ResourceAlreadyExistsException.class)
     public ResponseEntity<String> handleConflict(ResourceAlreadyExistsException  resourceAlreadyExistsException){
         return new ResponseEntity<>(resourceAlreadyExistsException.getMessage(),HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(UnAuthenticatedException.class)
+    public ResponseEntity<String> handleUnaAuthentication(UnAuthenticatedException unAuthenticatedException){
+        System.out.println(unAuthenticatedException.getMessage());
+        return new ResponseEntity<>(unAuthenticatedException.getMessage(),HttpStatus.UNAUTHORIZED);
     }
 }
